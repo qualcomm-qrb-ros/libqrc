@@ -47,14 +47,6 @@ ament_target_dependencies(libqrc
   qrc_udriver
 )
 
-if(QRC_RB5)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB5)
-elseif(QRC_RB3)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB3)
-elseif(QRC_RB8)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB8)
-endif()
-
 set(EXPORT_INCLUDE_DIRS
   include/app_msg/
   include/module/

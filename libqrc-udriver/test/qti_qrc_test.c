@@ -14,9 +14,6 @@
 #define MAX_DATA_LEN  100
 
 static struct option long_options[] = {
-    {"dev", required_argument, 0, 'd'},
-    {"gpiochip", required_argument, 0, 'g'},
-    {"reset_gpio", required_argument, 0, 'r'},
     {"size", required_argument, 0, 's'},
     {"times", required_argument, 0, 't'},
     {"help", required_argument, 0, 'h'},
@@ -26,9 +23,6 @@ static struct option long_options[] = {
 void usage() {
     printf("Usage: ./qti_qrc_test [options]\n");
     printf("Options:\n");
-    printf("  -d, --dev=DEVICE          Serial device node\n");
-    printf("  -g, --gpiochip=GPIOCHIP   GPIO chip device node\n");
-    printf("  -r, --reset_gpio=PIN      Reset GPIO pin\n");
     printf("  -s, --size=SIZE           The size of buffer sent or received at a time\n");
     printf("  -t, --times=NUMBER        Test repeat times\n");
 }
@@ -45,9 +39,6 @@ void generate_random_string(char *str, size_t len) {
 
 int main(int argc, char** argv)
 {
-    const char *dev = NULL;
-    const char *gpiochip = NULL;
-    int reset_gpio = -1;
     int size = -1;
     int times = -1;
     int ret;
@@ -55,15 +46,6 @@ int main(int argc, char** argv)
 
     while ((ret = getopt_long(argc, argv, "d:g:r:s:t:", long_options, &option_index)) != -1) {
         switch (ret) {
-            case 'd':
-                dev = optarg;
-                break;
-            case 'g':
-                gpiochip = optarg;
-                break;
-            case 'r':
-                reset_gpio = atoi(optarg);
-                break;
             case 's':
                 size = atoi(optarg);
                 break;
@@ -79,14 +61,14 @@ int main(int argc, char** argv)
         }
     }
 
-    if (!dev || !gpiochip || (reset_gpio <= 0) || (size <= 0) || (times <= 0)) {
+    if ((size <= 0) || (times <= 0)) {
         fprintf(stderr, "Error: Missing required options.\n");
         usage();
         exit(EXIT_FAILURE);
     }
 
     bool initialized = false;
-    int fd = qrc_udriver_open(dev);
+    int fd = qrc_udriver_open();
     if (fd < 0) {
         fprintf(stderr, "Failed to open device\n");
         return -1;
@@ -123,7 +105,7 @@ int main(int argc, char** argv)
         sscanf(str, "%c", &option);
 
         if (initialized == false) {
-            fd = qrc_udriver_open(dev);
+            fd = qrc_udriver_open();
             if (fd < 0) {
                 fprintf(stderr, "Failed to open device\n");
                 free(rx_buffer);
@@ -214,7 +196,7 @@ int main(int argc, char** argv)
                 count = 0;
                 while(count < times) {
                     sum = 0;
-                    fd = qrc_udriver_open(dev);
+                    fd = qrc_udriver_open();
                     generate_random_string(tx_buffer, length);
                     num = qrc_udriver_write(fd, tx_buffer, length);
                     if (num == -1) {
@@ -248,7 +230,7 @@ int main(int argc, char** argv)
                     qrc_udriver_close(fd);
                     initialized = false;
                 }
-                qrc_mcb_reset(gpiochip, reset_gpio);
+                qrc_mcb_reset();
                 printf("reset\n");
                 break;
             case '5':
