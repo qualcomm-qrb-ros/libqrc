@@ -29,6 +29,14 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
 SET_TARGET_PROPERTIES(qrc_udriver PROPERTIES VERSION 1.0)
 target_link_libraries(qrc_udriver gpiod)
 
+if(QRC_RB5)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB5)
+elseif(QRC_RB3)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB3)
+elseif(QRC_RB8)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB8)
+endif()
+
 ament_auto_add_executable(${PROJECT_NAME}_test
 test/qti_qrc_test.c
 )

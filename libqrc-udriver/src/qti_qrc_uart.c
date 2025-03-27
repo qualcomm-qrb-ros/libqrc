@@ -62,13 +62,13 @@ int qrc_serial_open(const char *qrc_dev)
 {
 	int fd = open(qrc_dev, O_RDWR|O_NONBLOCK);
 	if (fd < 0) {
-		fprintf(stderr, "Failed to open QRC tty device\n");
+		fprintf(stderr, "Failed to open %s tty device\n", qrc_dev);
 		return fd;
 	}
 
 	int ret = qrc_serial_set_baud(fd, DEFAULT_BAUDRATE);  //Set the baud rate
 	if (ret < 0) {
-		fprintf(stderr, "Failed to set tty device baud\n");
+		fprintf(stderr, "Failed to set %s tty device baud\n", qrc_dev);
 		close(fd);
 		return ret;
 	}

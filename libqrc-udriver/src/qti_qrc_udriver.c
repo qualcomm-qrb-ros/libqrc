@@ -8,6 +8,24 @@
 #include "qti_qrc_common.h"
 #include "gpiod.h"
 
+#ifdef QRC_RB5
+#  define QRC_FD         ("/dev/ttyHS1")
+#  define QRC_GPIOCHIP   ("/dev/gpiochip0")
+#  define QRC_RESETGPIO  168
+#endif
+
+#ifdef QRC_RB3
+#  define QRC_FD         ("/dev/ttyHS2")
+#  define QRC_GPIOCHIP   ("/dev/gpiochip4")
+#  define QRC_RESETGPIO  147
+#endif
+
+#ifdef QRC_RB8
+#  define QRC_FD         ("/dev/ttyHS2")
+#  define QRC_GPIOCHIP   ("/dev/gpiochip4")
+#  define QRC_RESETGPIO  129
+#endif
+
 static int ops_num = 0;
 enum bus_protocol_e {
     UART = 0,
@@ -27,9 +45,9 @@ struct qrc_user_driver protocol_list[3] = {
     {CAN, NULL}
 };
 
-int qrc_udriver_open(const char *qrc_dev)
+int qrc_udriver_open(void)
 {
-    return protocol_list[ops_num].device_ops->open(qrc_dev);
+    return protocol_list[ops_num].device_ops->open(QRC_FD);
 }
 
 void qrc_udriver_close(int fd)
@@ -57,17 +75,17 @@ int qrc_udriver_tcflsh(int fd)
     return protocol_list[ops_num].device_ops->tcflsh(fd);
 }
 
-int qrc_mcb_reset(const char *gpiochip, int reset_gpio)
+int qrc_mcb_reset(void)
 {
     struct gpiod_chip *chip = NULL;
     struct gpiod_line_request *request;
     struct gpiod_request_config *req_cfg;
     struct gpiod_line_config *line_cfg;
     struct gpiod_line_settings *line_settings;
-    unsigned int offsets[] = {reset_gpio};
+    unsigned int offsets[] = {QRC_RESETGPIO};
     int ret = 0;
 
-    chip = gpiod_chip_open(gpiochip);   //Open the GPIO chip
+    chip = gpiod_chip_open(QRC_GPIOCHIP);   //Open the GPIO chip
     if (!chip) {
         printf("Failed to open GPIO chip\n");
         ret = -1;
@@ -89,7 +107,7 @@ int qrc_mcb_reset(const char *gpiochip, int reset_gpio)
         goto cleanup;
     }
 
-    ret = gpiod_line_request_set_value(request, reset_gpio, GPIOD_LINE_VALUE_ACTIVE);
+    ret = gpiod_line_request_set_value(request, QRC_RESETGPIO, GPIOD_LINE_VALUE_ACTIVE);
     if (ret < 0) {
         printf("Failed to set GPIO line value to high\n");
         goto cleanup;
@@ -97,7 +115,7 @@ int qrc_mcb_reset(const char *gpiochip, int reset_gpio)
 
     usleep(100000);  //Wait
 
-    ret = gpiod_line_request_set_value(request, reset_gpio, GPIOD_LINE_VALUE_INACTIVE);
+    ret = gpiod_line_request_set_value(request, QRC_RESETGPIO, GPIOD_LINE_VALUE_INACTIVE);
     if (ret < 0) {
         printf("Failed to set GPIO line value to low\n");
         goto cleanup;

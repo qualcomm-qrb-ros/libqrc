@@ -46,47 +46,19 @@ struct qrc_s
 
 static struct qrc_s g_qrc;
 
-#ifdef QRC_RB5
-#  define QRC_THREAD_NUM (2)
-#  define QRC_IOC_MAGIC  'q'
-#  define QRC_FIONREAD   _IO(QRC_IOC_MAGIC, 5)
-#  define QRC_RESET_MCB  _IO(QRC_IOC_MAGIC, 2)
-#  define QRC_FD         ("/dev/ttyHS1")
-#  define QRC_BOOT_APP   '2'
-#  define QRC_GPIOCHIP   ("/dev/gpiochip0")
-#  define QRC_RESETGPIO  168
-#  define QRC_MAX_READ_SIZE  1024
-#endif
-
-#ifdef QRC_RB3
-#  define QRC_THREAD_NUM (2)
-#  define QRC_IOC_MAGIC  'q'
-#  define QRC_FIONREAD   _IO(QRC_IOC_MAGIC, 5)
-#  define QRC_RESET_MCB  _IO(QRC_IOC_MAGIC, 2)
-#  define QRC_FD         ("/dev/ttyHS2")
-#  define QRC_BOOT_APP   '2'
-#  define QRC_GPIOCHIP   ("/dev/gpiochip4")
-#  define QRC_RESETGPIO  147
-#  define QRC_MAX_READ_SIZE  1024
-#endif
-
-#ifdef QRC_RB8
-#  define QRC_THREAD_NUM (2)
-#  define QRC_IOC_MAGIC  'q'
-#  define QRC_FIONREAD   _IO(QRC_IOC_MAGIC, 5)
-#  define QRC_RESET_MCB  _IO(QRC_IOC_MAGIC, 2)
-#  define QRC_FD         ("/dev/ttyHS2")
-#  define QRC_BOOT_APP   '2'
-#  define QRC_GPIOCHIP   ("/dev/gpiochip4")
-#  define QRC_RESETGPIO  129
-#  define QRC_MAX_READ_SIZE  1024
-#endif
-
-
 #ifdef QRC_MCB
 #  define QRC_THREAD_NUM (2)
-#  define QRC_FD         ("/dev/ttyS2")
+#  define QRC_MCB_FD         ("/dev/ttyS2")
 #  define QRC_FIONREAD   FIONREAD
+
+#else
+#  define QRC_THREAD_NUM (2)
+#  define QRC_IOC_MAGIC  'q'
+#  define QRC_FIONREAD   _IO(QRC_IOC_MAGIC, 5)
+#  define QRC_RESET_MCB  _IO(QRC_IOC_MAGIC, 2)
+#  define QRC_BOOT_APP   '2'
+#  define QRC_MAX_READ_SIZE  1024
+
 #endif
 
 /****************************************************************************
@@ -112,7 +84,7 @@ static int  qrc_lock_start_timeout(bool *timeout);
 void TF_WriteImpl(TinyFrame *tf, const uint8_t *buff, uint32_t len)
 {
   uint32_t write_cnt = 0;
-#if defined(QRC_RB5) || defined(QRC_RB3) || defined(QRC_RB8)
+#ifndef QRC_MCB
   write_cnt          = qrc_udriver_write(g_qrc.fd, buff, len);
 #else // QRC_MCB
   write_cnt          = write(g_qrc.fd, buff, len);
@@ -671,7 +643,7 @@ static void qrc_lock_stop_timeout(void)
  ****************************************************************************/
 static void *read_thread(void *args)
 {
-#if defined(QRC_RB5) || defined(QRC_RB3) || defined(QRC_RB8)
+#ifndef QRC_MCB
   while (1)
     {
       uint8_t buf[QRC_MAX_READ_SIZE];
@@ -739,9 +711,9 @@ static int qrc_hardware_sync(int qrc_fd)
   char     ack[]     = QRC_HW_SYNC_MSG;
   uint32_t write_cnt = 0;
 
-#if defined(QRC_RB5) || defined(QRC_RB3) || defined(QRC_RB8)
+#ifndef QRC_MCB
   /* reset MCB */
-  qrc_mcb_reset(QRC_GPIOCHIP, QRC_RESETGPIO);
+  qrc_mcb_reset();
   sleep(2);
 
   /* Boot APP */
@@ -844,14 +816,14 @@ static int qrc_hardware_sync(int qrc_fd)
  ****************************************************************************/
 bool qrc_init(void)
 {
-#if defined(QRC_RB5) || defined(QRC_RB3) || defined(QRC_RB8)
-  g_qrc.fd = qrc_udriver_open(QRC_FD);
+#ifndef QRC_MCB
+  g_qrc.fd = qrc_udriver_open();
 #else
-  g_qrc.fd = open(QRC_FD, O_RDWR);
+  g_qrc.fd = open(QRC_MCB_FD, O_RDWR);
 #endif
   if (-1 == g_qrc.fd)
     {
-      printf("ERROR: %s open failed!\n", QRC_FD);
+      printf("ERROR: device open failed!\n");
       close(g_qrc.fd);
       return false;
     }
@@ -912,9 +884,9 @@ bool qrc_destroy(void)
   qrc_threadpool_destroy(g_qrc.control_threadpool);
   pthread_cancel(g_qrc.read_thread);
 
-#if defined(QRC_RB5) || defined(QRC_RB3) || defined(QRC_RB8)
+#ifndef QRC_MCB
   /* reset MCB */
-  qrc_mcb_reset(QRC_GPIOCHIP, QRC_RESETGPIO);
+  qrc_mcb_reset();
 #endif
 
   return close(g_qrc.fd) == 0;
