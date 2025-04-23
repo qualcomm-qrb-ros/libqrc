@@ -18,7 +18,7 @@ Currently, we only support use QCLINUX to build
 
 3. Clone this repository under `<qirp_decompressed_workspace>/qirp-sdk/ros_ws`
      ```bash
-     git clone https://github.com/quic-qrb-ros/robot_base_qrc.git
+     git clone https://github.com/qualcomm-qrb-ros/robot_base_qrc.git
      ```
 4. Build this project
      ```bash
