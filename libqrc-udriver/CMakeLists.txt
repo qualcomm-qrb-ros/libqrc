@@ -22,20 +22,22 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBGPIOD REQUIRED libgpiod)
+
 ament_auto_add_library(${PROJECT_NAME} SHARED
   src/qti_qrc_udriver.c
   src/qti_qrc_uart.c
 )
+
+if(LIBGPIOD_VERSION VERSION_GREATER_EQUAL "2.0.0")
+  target_compile_definitions(qrc_udriver PRIVATE LIBGPIOD_V2)
+else()
+  target_compile_definitions(qrc_udriver PRIVATE LIBGPIOD_V1)
+endif()
+
 SET_TARGET_PROPERTIES(qrc_udriver PROPERTIES VERSION 1.0)
 target_link_libraries(qrc_udriver gpiod)
-
-if(QRC_RB5)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB5)
-elseif(QRC_RB3)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB3)
-elseif(QRC_RB8)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB8)
-endif()
 
 ament_auto_add_executable(${PROJECT_NAME}_test
 test/qti_qrc_test.c
