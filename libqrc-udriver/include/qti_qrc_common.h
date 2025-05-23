@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <string.h>
 
 struct qrc_device_ops {
 	int (*open)(const char *qrc_dev);
