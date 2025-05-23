@@ -8,23 +8,7 @@
 #include "qti_qrc_common.h"
 #include "gpiod.h"
 
-#ifdef QRC_RB5
-#  define QRC_FD         ("/dev/ttyHS1")
-#  define QRC_GPIOCHIP   ("/dev/gpiochip0")
-#  define QRC_RESETGPIO  168
-#endif
-
-#ifdef QRC_RB3
-#  define QRC_FD         ("/dev/ttyHS2")
-#  define QRC_GPIOCHIP   ("/dev/gpiochip4")
-#  define QRC_RESETGPIO  147
-#endif
-
-#ifdef QRC_RB8
-#  define QRC_FD         ("/dev/ttyHS2")
-#  define QRC_GPIOCHIP   ("/dev/gpiochip4")
-#  define QRC_RESETGPIO  129
-#endif
+#define BUFFER_SIZE 128
 
 static int ops_num = 0;
 enum bus_protocol_e {
@@ -47,6 +31,32 @@ struct qrc_user_driver protocol_list[3] = {
 
 int qrc_udriver_open(void)
 {
+    char buffer[BUFFER_SIZE];
+    char QRC_FD[BUFFER_SIZE];
+    FILE *model_file = fopen("/sys/firmware/devicetree/base/model", "r");
+    if(model_file == NULL) {
+        printf("Model File Open Failed!\n");
+        return -1;
+    }
+
+    if (fgets(buffer, sizeof(buffer), model_file) != NULL) {
+        buffer[strcspn(buffer, "\n")] = 0;
+        if (strstr(buffer, "Robotics RB3gen2 addons vision mezz platform") != NULL) {
+            strcpy(QRC_FD, "/dev/ttyHS2");
+        } else if (strstr(buffer, "Addons IQ 9075 EVK") != NULL) {
+            strcpy(QRC_FD, "/dev/ttyHS2");
+        } else {
+            printf("QRC: The device is not supported!\n");
+            fclose(model_file);
+            return -1;
+        }
+    } else {
+        printf("Model File Read Failed!\n");
+        fclose(model_file);
+        return -1;
+    }
+    fclose(model_file);
+
     return protocol_list[ops_num].device_ops->open(QRC_FD);
 }
 
@@ -77,6 +87,36 @@ int qrc_udriver_tcflsh(int fd)
 
 int qrc_mcb_reset(void)
 {
+    char QRC_GPIOCHIP[BUFFER_SIZE];
+    unsigned int QRC_RESETGPIO;
+    char buffer[BUFFER_SIZE];
+    FILE *model_file = fopen("/sys/firmware/devicetree/base/model", "r");
+    if(model_file == NULL) {
+        printf("Model File Open Failed!\n");
+        return -1;
+    }
+
+    if (fgets(buffer, sizeof(buffer), model_file) != NULL) {
+        buffer[strcspn(buffer, "\n")] = 0;
+        if (strstr(buffer, "Robotics RB3gen2 addons vision mezz platform") != NULL) {
+            strcpy(QRC_GPIOCHIP, "/dev/gpiochip4");
+            QRC_RESETGPIO = 147;
+        } else if (strstr(buffer, "Addons IQ 9075 EVK") != NULL) {
+            strcpy(QRC_GPIOCHIP, "/dev/gpiochip4");
+            QRC_RESETGPIO = 129;
+        } else {
+            printf("QRC: The device is not supported!\n");
+            fclose(model_file);
+            return -1;
+        }
+    } else {
+        printf("Model File Read Failed!\n");
+        fclose(model_file);
+        return -1;
+    }
+    fclose(model_file);
+
+#ifdef LIBGPIOD_V2
     struct gpiod_chip *chip = NULL;
     struct gpiod_line_request *request;
     struct gpiod_request_config *req_cfg;
@@ -134,4 +174,55 @@ cleanup:
         gpiod_chip_close(chip);
 
     return ret;
+
+#else
+    struct gpiod_chip *chip = NULL;
+    struct gpiod_line *line = NULL;
+    int ret = 0;
+    const char* consumer = NULL;
+
+    chip = gpiod_chip_open(QRC_GPIOCHIP);   //Open the GPIO chip
+    if (!chip) {
+        printf("Failed to open GPIO chip\n");
+        ret = -1;
+        goto cleanup;
+    }
+
+    line = gpiod_chip_get_line(chip, QRC_RESETGPIO);   //Get the GPIO line
+    if (!line) {
+        printf("Failed to get GPIO line\n");
+        ret = -1;
+        goto cleanup;
+    }
+
+    consumer = gpiod_line_consumer(line);
+
+    ret = gpiod_line_request_output(line, consumer, 0);
+    if (ret < 0) {
+        printf("Failed to request GPIO line as output\n");
+        goto cleanup;
+    }
+
+    ret = gpiod_line_set_value(line, 1);
+    if (ret < 0) {
+        printf("Failed to set GPIO line value to high\n");
+        goto cleanup;
+    }
+
+    usleep(100000); //Wait
+
+    ret = gpiod_line_set_value(line, 0);
+    if (ret < 0) {
+        printf("Failed to set GPIO line value to low\n");
+        goto cleanup;
+    }
+
+cleanup:
+    if (line)
+        gpiod_line_release(line);
+    if (chip)
+        gpiod_chip_close(chip);
+
+    return ret;
+#endif
 }
