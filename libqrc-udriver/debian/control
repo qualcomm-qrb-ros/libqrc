@@ -1,0 +1,29 @@
+Source: qcom-libqrc-udriver
+Section: libs
+Priority: optional
+Maintainer: Canfeng Zhuang <czhuang@qti.qualcomm.com>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake,
+ libgpiod-dev(>= 1.6.3),
+Standards-Version: 4.6.2
+Homepage: 
+
+Package: qcom-libqrc-udriver-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ qcom-libqrc-udriver (= ${binary:Version}),
+ ${misc:Depends},
+Description: User-Space Driver Library for Qcom Robot Communication 
+
+Package: qcom-libqrc-udriver
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ libgpiod2t64(>= 1.6.3),
+Description: User-Space Driver Library for Qcom Robot Communication
