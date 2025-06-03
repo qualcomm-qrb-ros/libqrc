@@ -17,7 +17,7 @@ Multi-Arch: same
 Depends:
  qcom-libqrc-udriver (= ${binary:Version}),
  ${misc:Depends},
-Description: User-Space Driver Library for Qcom Robot Communication 
+Description: User-Space Driver Library for Qcom Robot Communication - development files
 
 Package: qcom-libqrc-udriver
 Architecture: any
