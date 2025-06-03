@@ -19,26 +19,32 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic -O0 -fPIC)
 endif()
 
-find_package(ament_cmake_auto REQUIRED)
-ament_auto_find_build_dependencies()
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBGPIOD REQUIRED libgpiod)
 
-ament_auto_add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} SHARED
   src/qti_qrc_udriver.c
   src/qti_qrc_uart.c
 )
-SET_TARGET_PROPERTIES(qrc_udriver PROPERTIES VERSION 1.0)
-target_link_libraries(qrc_udriver gpiod)
 
-if(QRC_RB5)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB5)
-elseif(QRC_RB3)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB3)
-elseif(QRC_RB8)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE QRC_RB8)
+if(LIBGPIOD_VERSION VERSION_GREATER_EQUAL "2.0.0")
+  target_compile_definitions(${PROJECT_NAME} PRIVATE LIBGPIOD_V2)
+else()
+  target_compile_definitions(${PROJECT_NAME} PRIVATE LIBGPIOD_V1)
 endif()
 
-ament_auto_add_executable(${PROJECT_NAME}_test
-test/qti_qrc_test.c
-)
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION 1.0)
+target_link_libraries(${PROJECT_NAME} gpiod)
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+install(FILES include/qti_qrc_udriver.h DESTINATION include)
 
-ament_auto_package()
+add_executable(${PROJECT_NAME}_test
+  test/qti_qrc_test.c
+)
+target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME})
+install(TARGETS ${PROJECT_NAME}_test
+  RUNTIME DESTINATION bin)
+
