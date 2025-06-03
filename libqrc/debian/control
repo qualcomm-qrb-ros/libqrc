@@ -1,0 +1,29 @@
+Source: qcom-libqrc
+Section: libs
+Priority: optional
+Maintainer: Canfeng Zhuang <czhuang@qti.qualcomm.com>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake,
+ qcom-libqrc-udriver-dev,
+Standards-Version: 4.6.2
+Homepage: 
+
+Package: qcom-libqrc-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ qcom-libqrc (= ${binary:Version}),
+ ${misc:Depends},
+Description: Library for Qcom Robot Communication
+
+Package: qcom-libqrc
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ qcom-libqrc-udriver,
+Description: Library for Qcom Robot Communication

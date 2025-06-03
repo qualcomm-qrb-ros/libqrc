@@ -17,9 +17,6 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(ament_cmake REQUIRED)
-find_package(qrc_udriver REQUIRED)
-
 set(INCLUDE_DIRS
   include/app_msg/
   include/module/
@@ -39,13 +36,11 @@ set(LIBQRC_SRCS
   protocol/tinyframe/TinyFrame.c
 )
 
-add_library(${PROJECT_NAME} SHARED
+add_library(qrc SHARED
   ${LIBQRC_SRCS}
 )
-#target_link_libraries(${PROJECT_NAME} qrc_udriver)
-ament_target_dependencies(libqrc
-  qrc_udriver
-)
+target_link_libraries(qrc qrc_udriver)
+SET_TARGET_PROPERTIES(qrc PROPERTIES VERSION 1.0)
 
 set(EXPORT_INCLUDE_DIRS
   include/app_msg/
@@ -58,12 +53,10 @@ install(
 )
 
 install(
-  TARGETS ${PROJECT_NAME}
+  TARGETS qrc
   EXPORT export_${PROJECT_NAME}
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
 )
-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_package()
