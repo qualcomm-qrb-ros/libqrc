@@ -40,7 +40,7 @@ add_library(qrc SHARED
   ${LIBQRC_SRCS}
 )
 target_link_libraries(qrc qrc_udriver)
-SET_TARGET_PROPERTIES(qrc PROPERTIES VERSION 1.0)
+SET_TARGET_PROPERTIES(qrc PROPERTIES VERSION 1.0.0)
 
 set(EXPORT_INCLUDE_DIRS
   include/app_msg/
