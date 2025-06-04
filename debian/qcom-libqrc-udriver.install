@@ -1,0 +1,3 @@
+usr/lib/libqrc_udriver.so.1.0.0
+usr/lib/libqrc_udriver.so
+rules/99-qcom-qrc.rules usr/lib/udev/rules.d/
