@@ -654,6 +654,7 @@ static void *read_thread(void *args)
       else {
         usleep(100);
       }
+      pthread_testcancel();
     }
 #else //QRC_MCB
   int readable_len;
@@ -676,7 +677,10 @@ static void *read_thread(void *args)
           free(buf);
         }
       else
+      {
         usleep(100);
+      }
+      pthread_testcancel();
     }
 #endif
 }
@@ -883,6 +887,7 @@ bool qrc_destroy(void)
   qrc_threadpool_destroy(g_qrc.msg_threadpool);
   qrc_threadpool_destroy(g_qrc.control_threadpool);
   pthread_cancel(g_qrc.read_thread);
+  pthread_join(g_qrc.read_thread, NULL);
 
 #ifndef QRC_MCB
   /* reset MCB */
