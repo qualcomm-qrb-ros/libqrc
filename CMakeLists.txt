@@ -36,11 +36,11 @@ set(LIBQRC_SRCS
   protocol/tinyframe/TinyFrame.c
 )
 
-add_library(qrc SHARED
+add_library(${PROJECT_NAME} SHARED
   ${LIBQRC_SRCS}
 )
-target_link_libraries(qrc qrc_udriver)
-SET_TARGET_PROPERTIES(qrc PROPERTIES VERSION 1.0.0)
+target_link_libraries(${PROJECT_NAME} qrc_udriver)
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION 1.0.0)
 
 set(EXPORT_INCLUDE_DIRS
   include/app_msg/
@@ -53,7 +53,7 @@ install(
 )
 
 install(
-  TARGETS qrc
+  TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
