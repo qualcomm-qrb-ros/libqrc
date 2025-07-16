@@ -1,2 +1,2 @@
 usr/include/*
-usr/bin
+usr/lib/libqrc_udriver.so
