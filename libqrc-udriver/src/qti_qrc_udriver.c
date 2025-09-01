@@ -43,7 +43,9 @@ int qrc_udriver_open(void)
         buffer[strcspn(buffer, "\n")] = 0;
         if (strstr(buffer, "Robotics RB3gen2 addons vision mezz platform") != NULL) {
             strcpy(QRC_FD, "/dev/ttyHS2");
-        } else if (strstr(buffer, "Addons IQ 9075 EVK") != NULL) {
+        } else if (strstr(buffer, "IQ 9075 EVK") != NULL) {
+            strcpy(QRC_FD, "/dev/ttyHS2");
+        } else if (strstr(buffer, "IQ 8275 EVK") != NULL) {
             strcpy(QRC_FD, "/dev/ttyHS2");
         } else {
             printf("QRC: The device is not supported!\n");
@@ -101,9 +103,12 @@ int qrc_mcb_reset(void)
         if (strstr(buffer, "Robotics RB3gen2 addons vision mezz platform") != NULL) {
             strcpy(QRC_GPIOCHIP, "/dev/gpiochip4");
             QRC_RESETGPIO = 147;
-        } else if (strstr(buffer, "Addons IQ 9075 EVK") != NULL) {
+        } else if (strstr(buffer, "IQ 9075 EVK") != NULL) {
             strcpy(QRC_GPIOCHIP, "/dev/gpiochip4");
             QRC_RESETGPIO = 129;
+        } else if (strstr(buffer, "IQ 8275 EVK") != NULL) {
+            strcpy(QRC_GPIOCHIP, "/dev/gpiochip2");
+            QRC_RESETGPIO = 113;
         } else {
             printf("QRC: The device is not supported!\n");
             fclose(model_file);
