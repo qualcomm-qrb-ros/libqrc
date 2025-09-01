@@ -17,9 +17,6 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(ament_cmake REQUIRED)
-find_package(qrc_udriver REQUIRED)
-
 set(INCLUDE_DIRS
   include/app_msg/
   include/module/
@@ -42,10 +39,8 @@ set(LIBQRC_SRCS
 add_library(${PROJECT_NAME} SHARED
   ${LIBQRC_SRCS}
 )
-#target_link_libraries(${PROJECT_NAME} qrc_udriver)
-ament_target_dependencies(libqrc
-  qrc_udriver
-)
+target_link_libraries(${PROJECT_NAME} qrc_udriver)
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION 1 VERSION 1.1.0)
 
 set(EXPORT_INCLUDE_DIRS
   include/app_msg/
@@ -65,5 +60,3 @@ install(
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
 )
-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_package()
