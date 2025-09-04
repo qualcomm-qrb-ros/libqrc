@@ -45,7 +45,7 @@ int qrc_udriver_open(void)
             strcpy(QRC_FD, "/dev/ttyHS2");
         } else if (strstr(buffer, "IQ 9075 EVK") != NULL) {
             strcpy(QRC_FD, "/dev/ttyHS2");
-        } else if (strstr(buffer, "IQ 8275 EVK") != NULL) {
+        } else if (strstr(buffer, "8275") != NULL) {
             strcpy(QRC_FD, "/dev/ttyHS2");
         } else {
             printf("QRC: The device is not supported!\n");
@@ -106,7 +106,7 @@ int qrc_mcb_reset(void)
         } else if (strstr(buffer, "IQ 9075 EVK") != NULL) {
             strcpy(QRC_GPIOCHIP, "/dev/gpiochip4");
             QRC_RESETGPIO = 129;
-        } else if (strstr(buffer, "IQ 8275 EVK") != NULL) {
+        } else if (strstr(buffer, "8275") != NULL) {
             strcpy(QRC_GPIOCHIP, "/dev/gpiochip2");
             QRC_RESETGPIO = 113;
         } else {
