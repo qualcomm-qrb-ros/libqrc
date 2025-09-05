@@ -8,8 +8,8 @@
 #ifndef __MOTION_MSG_H
 #define __MOTION_MSG_H
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /* Robot motion pipe name */
 #define MOTION_PIPE "motion"
@@ -60,33 +60,33 @@ struct speed_cmd_s
 
 struct position_cmd_s
 {
-  int   pose_type;
+  int pose_type;
   float pose;
 };
 
 union motion_control_data_u
 {
-  struct speed_cmd_s    speed_cmd;
+  struct speed_cmd_s speed_cmd;
   struct position_cmd_s position_cmd;
-  int                   emergency;
-  int                   mode;
-  int                   motor_driver_status;
+  int emergency;
+  int mode;
+  int motor_driver_status;
 } __attribute__((aligned(4)));
 
 struct motion_control_msg_s
 {
-  int                         msg_type;
+  int msg_type;
   union motion_control_data_u data;
 } __attribute__((aligned(4)));
 
 /* motion odom structure */
 struct motion_odom_s
 {
-  int       type;
+  int type;
   long long sec;
   long long ns;
-  float     x;
-  float     z;
+  float x;
+  float z;
 } __attribute__((aligned(4)));
 
 #endif

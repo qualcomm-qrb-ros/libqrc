@@ -17,6 +17,8 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(qrc_udriver REQUIRED)
+
 set(INCLUDE_DIRS
   include/app_msg/
   include/module/
@@ -27,7 +29,9 @@ set(INCLUDE_DIRS
 
 include_directories(
   ${INCLUDE_DIRS}
+  ${QRC_UDRIVER_INCLUDE_DIR}
 )
+link_directories(${QRC_UDRIVER_LIBRARY_DIR})
 
 set(LIBQRC_SRCS
   protocol/qrc_msg_management.c
