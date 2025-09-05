@@ -11,8 +11,8 @@
 /****************************************************************************
  * Included Files
  ****************************************************************************/
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /********************************************************************************
  * Pre-processor Definitions
@@ -63,8 +63,8 @@ struct charger_ctl_msg_s
   uint32_t cmd_type;
   union
   {
-    float    voltage;
-    float    current;
+    float voltage;
+    float current;
     uint32_t pile_stats;
     uint32_t is_charging;
     uint32_t sm_state;
