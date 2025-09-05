@@ -39,16 +39,16 @@ enum emerg_msg_event_type_e
 
 struct emerg_msg_event_s
 {
-  int type; //enum emerg_msg_event_type_e
+  int type;  // enum emerg_msg_event_type_e
   int trigger_sensor;
 };
 
 struct emerg_msg_s
 {
-  int msg_type; //enum emerg_msg_type_e
+  int msg_type;  // enum emerg_msg_type_e
   union
   {
-    int                      value;
+    int value;
     struct emerg_msg_event_s event;
   } data;
 } __attribute__((aligned(4)));

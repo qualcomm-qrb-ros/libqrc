@@ -8,8 +8,8 @@
 #ifndef __IMU_MSG_H
 #define __IMU_MSG_H
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <time.h>
 
 /* IMU pipe name */
@@ -27,8 +27,8 @@ struct imu_data_s
 
 struct imu_msg_s
 {
-  long long         sec; /* seconds */
-  long long         ns;  /* nanoseconds */
+  long long sec; /* seconds */
+  long long ns;  /* nanoseconds */
   struct imu_data_s data;
 } __attribute__((aligned(4)));
 

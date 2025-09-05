@@ -8,8 +8,8 @@
 #ifndef __MISC_MSG_H
 #define __MISC_MSG_H
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /* MISC pipe name */
 #define MISC_PIPE "misc"
