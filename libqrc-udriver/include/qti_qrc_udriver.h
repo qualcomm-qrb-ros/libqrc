@@ -11,14 +11,11 @@
 
 int qrc_udriver_open(void);
 void qrc_udriver_close(int fd);
-ssize_t qrc_udriver_read(int fd, char *buffer, size_t size);
-ssize_t qrc_udriver_write(int fd, const char *data, size_t length);
-int qrc_udriver_fionread(int fd, int *arg);
+ssize_t qrc_udriver_read(int fd, char * buffer, size_t size);
+ssize_t qrc_udriver_write(int fd, const char * data, size_t length);
+int qrc_udriver_fionread(int fd, int * arg);
 int qrc_udriver_tcflsh(int fd);
 
 int qrc_mcb_reset(void);
 
 #endif
-
-
-

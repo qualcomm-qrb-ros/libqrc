@@ -8,8 +8,8 @@
 #ifndef __CLIENT_CONTROL_MSG_H
 #define __CLIENT_CONTROL_MSG_H
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /* Client pipe name */
 #define CLIENT_PIPE "client"
