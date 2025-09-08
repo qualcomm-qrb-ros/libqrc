@@ -28,6 +28,31 @@ struct qrc_user_driver
 
 struct qrc_user_driver protocol_list[3] = { { UART, &qrc_uart_ops }, { SPI, NULL }, { CAN, NULL } };
 
+typedef struct
+{
+  const char * model;
+  const char * tty;
+  const char * gpiochip;
+  unsigned int gpio;
+} model_info_t;
+
+model_info_t g_model_info_map[] = {
+  { "Robotics RB3gen2 addons vision mezz platform", "/dev/ttyHS2", "/dev/gpiochip4", 147 },
+  { "IQ 9075 EVK", "/dev/ttyHS2", "/dev/gpiochip4", 129 },
+  { "8275", "/dev/ttyHS2", "/dev/gpiochip2", 113 },
+};
+const int g_model_info_map_size = sizeof(g_model_info_map) / sizeof(g_model_info_map[0]);
+
+const model_info_t * find_model_info(const char * model_str)
+{
+  for (int i = 0; i < g_model_info_map_size; i++) {
+    if (strstr(model_str, g_model_info_map[i].model) != NULL) {
+      return &g_model_info_map[i];
+    }
+  }
+  return NULL;
+}
+
 int qrc_udriver_open(void)
 {
   char buffer[BUFFER_SIZE];
@@ -40,17 +65,13 @@ int qrc_udriver_open(void)
 
   if (fgets(buffer, sizeof(buffer), model_file) != NULL) {
     buffer[strcspn(buffer, "\n")] = 0;
-    if (strstr(buffer, "Robotics RB3gen2 addons vision mezz platform") != NULL) {
-      strcpy(QRC_FD, "/dev/ttyHS2");
-    } else if (strstr(buffer, "IQ 9075 EVK") != NULL) {
-      strcpy(QRC_FD, "/dev/ttyHS2");
-    } else if (strstr(buffer, "8275") != NULL) {
-      strcpy(QRC_FD, "/dev/ttyHS2");
-    } else {
+    const model_info_t * info = find_model_info(buffer);
+    if (info == NULL) {
       printf("QRC: The device is not supported!\n");
       fclose(model_file);
       return -1;
     }
+    strcpy(QRC_FD, info->tty);
   } else {
     printf("Model File Read Failed!\n");
     fclose(model_file);
@@ -99,20 +120,14 @@ int qrc_mcb_reset(void)
 
   if (fgets(buffer, sizeof(buffer), model_file) != NULL) {
     buffer[strcspn(buffer, "\n")] = 0;
-    if (strstr(buffer, "Robotics RB3gen2 addons vision mezz platform") != NULL) {
-      strcpy(QRC_GPIOCHIP, "/dev/gpiochip4");
-      QRC_RESETGPIO = 147;
-    } else if (strstr(buffer, "IQ 9075 EVK") != NULL) {
-      strcpy(QRC_GPIOCHIP, "/dev/gpiochip4");
-      QRC_RESETGPIO = 129;
-    } else if (strstr(buffer, "8275") != NULL) {
-      strcpy(QRC_GPIOCHIP, "/dev/gpiochip2");
-      QRC_RESETGPIO = 113;
-    } else {
+    const model_info_t * info = find_model_info(buffer);
+    if (info == NULL) {
       printf("QRC: The device is not supported!\n");
       fclose(model_file);
       return -1;
     }
+    strcpy(QRC_GPIOCHIP, info->gpiochip);
+    QRC_RESETGPIO = info->gpio;
   } else {
     printf("Model File Read Failed!\n");
     fclose(model_file);
