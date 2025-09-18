@@ -12,8 +12,9 @@
 
 ## 👋 Overview
 
-**libqrc** is is a dynamic library designed to facilitate robust and efficient communication between applications and the Motor Control Board (MCB).
-It serves as an abstraction layer, providing APIs for upper-layer applications, covering transport protocol management, message handling, and low-level device operationsa
+This library is used for Qualcomm-specific AMR.  
+**libqrc** is is a dynamic library designed to facilitate robust and efficient communication between applications and the Motor Control Board (MCB).  
+It serves as an abstraction layer, providing APIs for upper-layer applications, covering transport protocol management, message handling, and low-level device operationsa.
 
 <div align="center">
   <img src="./docs/assets/architecture.png" alt="architecture">
@@ -21,8 +22,8 @@ It serves as an abstraction layer, providing APIs for upper-layer applications, 
 
 <br>
 
-LIBQRC includes two components: QRC protocol and QRC user driver.
-The QRC protocol, which is based on the TinyFrame protocol, is designed for upper-layer robotics applications, while the QRC user driver is responsible for invoking low-level drivers.
+LIBQRC includes two components: QRC protocol and QRC user driver.  
+The QRC protocol, which is based on the TinyFrame protocol, is designed for upper-layer robotics applications, while the QRC user driver is responsible for invoking low-level drivers.  
 When upper-layer applications need to send data to the MCB, the QRC protocol encapsulates the data, which is then transmitted to the MCB via the QRC user driver. Similarly, data returned from the MCB is received by the QRC user driver and parsed by the QRC protocol.
 
 ---
@@ -103,26 +104,35 @@ int main(int argc, char ** argv)
     <td>Qualcomm Dragonwing™ IQ-9075 EVK</td>
     <th><a href="https://www.qualcomm.com/products/internet-of-things/industrial-processors/iq9-series/iq-9075"><img src="https://s7d1.scene7.com/is/image/dmqualcommprod/dragonwing-IQ-9075-EVK?$QC_Responsive$&fmt=png-alpha" width="160"></a></th>
   </tr>
-    <tr>
+</table>
+
+<table >
+  <tr>
+    <th>Dependent Hardware</th>
+    <th>Hardware Overview</th>
+    <th>Description</th>
+  </tr>
+  <tr>
     <td>Motor Control Board</td>
     <th><img src="./docs/assets/mcb.png" width="160"></th>
+    <td>This board needs to be plugged into the Development Hardware.</td>
   </tr>
 </table>
 
 ---
 
-## ✨ Installation
+## ✨ Build from source code
 
 > [!IMPORTANT]
-> **PREREQUISITES**: The following steps need to be run on **Qualcomm Ubuntu** and **ROS Jazzy**.<br>
-> Reference [Install Ubuntu on Qualcomm IoT Platforms](https://ubuntu.com/download/qualcomm-iot) and [Install ROS Jazzy](https://docs.ros.org/en/jazzy/index.html) to setup environment. <br>
+> **PREREQUISITES**: The following steps need to be run on **ROS Jazzy**.<br>
+> Reference [Install ROS Jazzy](https://docs.ros.org/en/jazzy/index.html) to setup environment. <br>
 > For Qualcomm Linux, please check out the [Qualcomm Intelligent Robotics Product SDK](https://docs.qualcomm.com/bundle/publicresource/topics/80-70018-265/introduction_1.html?vproduct=1601111740013072&version=1.4&facet=Qualcomm%20Intelligent%20Robotics%20Product%20(QIRP)%20SDK) documents.
 
 Install dependencies:
 
 ```bash
 sudo apt update
-sudo apt install -y libgpiod-dev
+sudo apt install -y libgpiod-dev=1.6.3-1.1build1
 ```
 
 Download the source code and build with colcon:
