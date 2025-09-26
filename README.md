@@ -143,7 +143,7 @@ mkdir -p ~/ros_ws/src && cd ~/ros_ws/src && \
 git clone https://github.com/qualcomm-qrb-ros/libqrc.git && \
 sudo cp libqrc/rules/99-qcom-qrc.rules /usr/lib/udev/rules.d/ && \
 sudo udevadm control --reload-rules && sudo udevadm trigger && \
-cd ~/ros-ws/ && \
+cd ~/ros_ws/ && \
 colcon build
 ```
 
@@ -161,7 +161,7 @@ colcon build
     uart_test_app
 
     # On the Qualcomm device
-    cd ~/ros-ws/ && \
+    cd ~/ros_ws/ && \
     source install/local_setup.bash && \
     qrc_udriver_test -s 10 -t 10
 
