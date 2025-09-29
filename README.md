@@ -33,7 +33,7 @@ When upper-layer applications need to send data to the MCB, the QRC protocol enc
     * [`libqrc` APIs](#-libqrc-apis)
     * [`libqrc-udriver` APIs](#-libqrc-udriver-apis)
   * [Supported Targets](#-supported-targets)
-  * [Installation](#-installation)
+  * [Build from source code](#-build-from-source-code)
   * [Usage](#-usage)
   * [Contributing](#-contributing)
   * [License](#-license)
@@ -95,14 +95,17 @@ int main(int argc, char ** argv)
   <tr>
     <th>Development Hardware</th>
     <th>Hardware Overview</th>
+    <th>Comment</th>
   </tr>
   <tr>
     <td>Qualcomm Dragonwing™ RB3 Gen2</td>
     <th><a href="https://www.qualcomm.com/developer/hardware/rb3-gen-2-development-kit"><img src="https://s7d1.scene7.com/is/image/dmqualcommprod/rb3-gen2-carousel?fmt=webp-alpha&qlt=85" width="180"/></a></th>
+    <th></th>
   </tr>
     <tr>
     <td>Qualcomm Dragonwing™ IQ-9075 EVK</td>
     <th><a href="https://www.qualcomm.com/products/internet-of-things/industrial-processors/iq9-series/iq-9075"><img src="https://s7d1.scene7.com/is/image/dmqualcommprod/dragonwing-IQ-9075-EVK?$QC_Responsive$&fmt=png-alpha" width="160"></a></th>
+    <td>It will be available on Canonical Ubuntu-24.04-x05.</td>
   </tr>
 </table>
 
@@ -143,7 +146,7 @@ mkdir -p ~/ros_ws/src && cd ~/ros_ws/src && \
 git clone https://github.com/qualcomm-qrb-ros/libqrc.git && \
 sudo cp libqrc/rules/99-qcom-qrc.rules /usr/lib/udev/rules.d/ && \
 sudo udevadm control --reload-rules && sudo udevadm trigger && \
-cd ~/ros-ws/ && \
+cd ~/ros_ws/ && \
 colcon build
 ```
 
@@ -153,15 +156,32 @@ colcon build
 > [!IMPORTANT]
 > **PREREQUISITES**:The Motor Control Board needs to be plugged into the Qualcomm device.
 
-1.For specific applications, please see [qrb_ros_robot_base](https://github.com/qualcomm-qrb-ros/qrb_ros_robot_base)
+### 🔹 Application
 
-2.Test the communication between the Qualcomm device and The Motor Control Board
+For specific applications, please see [qrb_ros_robot_base](https://github.com/qualcomm-qrb-ros/qrb_ros_robot_base)
+
+### 🔹 Test the communication between the Qualcomm device and The MCB
+
+#### 🔌 Connecting to the MCB UART
+You can access the UART interface of the MCB using one of the following methods:  
+**Method 1: Direct Connection via PC/Server**
+- Connect the UART port of the MCB directly to your PC or server using a serial cable.
+
+**Method 2: Connection via Qualcomm Device**
+- Connect the UART port of the MCB to a Qualcomm device.
+- On the Qualcomm device, access the MCB UART interface with the following command:
+
+  ```bash
+    #Replace `ttyUSBx` with the actual device node assigned after connection.
+    sudo microcom -s 115200 -p /dev/ttyUSBx
+  ```
+#### 🔌 Execute the command
   ```bash
     # On the Motor Control Board
     uart_test_app
 
     # On the Qualcomm device
-    cd ~/ros-ws/ && \
+    cd ~/ros_ws/ && \
     source install/local_setup.bash && \
     qrc_udriver_test -s 10 -t 10
 
