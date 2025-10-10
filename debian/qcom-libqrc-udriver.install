@@ -1,4 +1,4 @@
-usr/lib/libqrc_udriver.so.1.0.0
+usr/lib/libqrc_udriver.so.1.*
 usr/lib/libqrc_udriver.so.1
 rules/99-qcom-qrc.rules usr/lib/udev/rules.d/
 usr/bin
