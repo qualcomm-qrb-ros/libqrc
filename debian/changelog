@@ -1,3 +1,11 @@
+qcom-libqrc (1.1.1) noble; urgency=medium
+
+  * fix: update code style
+  * fix: solve the problem of throwing an exception when qrc is destroyed
+  * fix: remove invalid error type for misc_msg
+
+ -- Canfeng Zhuang <czhuang@qti.qualcomm.com>  Fri, 10 Oct 2025 15:50:39 +0000
+
 qcom-libqrc (1.0.0) noble; urgency=medium
 
   * Initial release.
