@@ -56,6 +56,11 @@ install(
   DESTINATION include
 )
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  INSTALL_RPATH "$ORIGIN/../lib"
+  BUILD_WITH_INSTALL_RPATH TRUE
+)
+
 install(
   TARGETS ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
