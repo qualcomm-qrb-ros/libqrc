@@ -7,6 +7,7 @@
   <maintainer email="quic_czhuang@quicinc.com">Canfeng Zhuang</maintainer>
   <license>BSD-3-Clause-Clear</license>
 
+  <buildtool_depend>ament_cmake</buildtool_depend>
   <build_depend>libgpiod-dev</build_depend>
 
 </package>

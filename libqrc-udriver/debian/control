@@ -1,0 +1,12 @@
+Source: ros-jazzy-qrc-udriver
+Section: misc
+Priority: optional
+Maintainer: Canfeng Zhuang <czhuang@qti.qualcomm.com>
+Build-Depends: debhelper-compat(=13), libgpiod-dev, ros-jazzy-ament-cmake
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-qrc-udriver
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+Description: User-Space Driver Library for Qcom Robot Communication

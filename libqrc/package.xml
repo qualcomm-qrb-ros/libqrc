@@ -7,6 +7,7 @@
   <maintainer email="czhuang@qti.qualcomm.com">Canfeng Zhuang</maintainer>
   <license>BSD</license>
 
+  <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>qrc_udriver</depend>
 
 </package>

@@ -19,6 +19,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic -O0 -fPIC)
 endif()
 
+find_package(ament_cmake REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBGPIOD REQUIRED libgpiod)
 
@@ -41,18 +42,11 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION bin)
 install(FILES include/qti_qrc_udriver.h DESTINATION include)
 
-include(CMakePackageConfigHelpers)
-
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
-                              "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-                              INSTALL_DESTINATION share/${PROJECT_NAME}/cmake)
-
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" DESTINATION share/${PROJECT_NAME}/cmake)
-
 add_executable(${PROJECT_NAME}_test
   test/qti_qrc_test.c
 )
 target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME})
 install(TARGETS ${PROJECT_NAME}_test
   RUNTIME DESTINATION bin)
-
+ament_export_include_directories(include)
+ament_package()
