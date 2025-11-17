@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+
+udevadm control --reload-rules && udevadm trigger
+
+exit 0
