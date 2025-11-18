@@ -1,0 +1,3 @@
+usr/include/*
+usr/lib/libqrc_udriver.so
+usr/share/qrc_udriver/cmake/*
