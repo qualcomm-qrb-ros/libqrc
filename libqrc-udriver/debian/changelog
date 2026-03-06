@@ -1,3 +1,9 @@
+qcom-libqrc-udriver (1.1.2) noble; urgency=medium
+
+  * feat: align names with upstream DTS
+
+ -- Canfeng Zhuang <czhuang@qti.qualcomm.com>  Fri, 06 Mar 2026 11:05:23 +0800
+
 qcom-libqrc-udriver (1.1.1) noble; urgency=medium
 
   * fix: update code style, ROS dependency

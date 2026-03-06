@@ -37,9 +37,11 @@ typedef struct
 } model_info_t;
 
 model_info_t g_model_info_map[] = {
-  { "Robotics RB3gen2 addons vision mezz platform", "/dev/ttyHS2", "/dev/gpiochip4", 147 },
+  { "Robotics RB3gen2", "/dev/ttyHS2", "/dev/gpiochip4", 147 },
   { "IQ 9075 EVK", "/dev/ttyHS2", "/dev/gpiochip4", 129 },
+  { "Lemans", "/dev/ttyHS2", "/dev/gpiochip4", 129 },
   { "8275", "/dev/ttyHS2", "/dev/gpiochip2", 113 },
+  { "Monaco", "/dev/ttyHS2", "/dev/gpiochip2", 113 },
 };
 const int g_model_info_map_size = sizeof(g_model_info_map) / sizeof(g_model_info_map[0]);
 

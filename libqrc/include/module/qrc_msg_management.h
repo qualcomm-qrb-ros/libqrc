@@ -15,8 +15,6 @@
 extern "C" {
 #endif
 
-typedef void (*qrc_msg_cb)(struct qrc_pipe_s * pipe, void * data, size_t len, bool response);
-
 typedef struct qrc_pipe_s
 {
   char pipe_name[10];
@@ -28,6 +26,8 @@ typedef struct qrc_pipe_s
   bool pipe_ready;
   void (*cb)(struct qrc_pipe_s * pipe, void * data, size_t len, bool response);
 } qrc_pipe_s;
+
+typedef void (*qrc_msg_cb)(struct qrc_pipe_s * pipe, void * data, size_t len, bool response);
 
 enum qrc_write_status_e
 {

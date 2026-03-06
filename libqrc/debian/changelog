@@ -1,3 +1,9 @@
+qcom-libqrc (1.1.2) noble; urgency=medium
+
+  * fix: move qrc_msg_cb typedef after struct definition
+
+ -- Canfeng Zhuang <czhuang@qti.qualcomm.com>  Fri, 06 Mar 2026 11:06:26 +0800
+
 qcom-libqrc (1.1.1) noble; urgency=medium
 
   * fix: update code style
