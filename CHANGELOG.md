@@ -1,5 +1,11 @@
 # Changelog for package libqrc
 
+## 1.1.2 (2026-03-06)
+
+- fix: move qrc_msg_cb typedef after struct definition
+- feat: align names with upstream DTS
+- Contributors: Canfeng Zhuang
+
 ## 1.1.1 (2025-09-26)
 
 - fix: support all 8275 chip boards
